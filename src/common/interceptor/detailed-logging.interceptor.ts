@@ -7,6 +7,7 @@ import {
 } from '@nestjs/common';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { Request } from 'express';
 
 @Injectable()
 export class DetailedLoggingInterceptor implements NestInterceptor {
@@ -28,7 +29,12 @@ export class DetailedLoggingInterceptor implements NestInterceptor {
         this.logger.log(
           `Response ${method} ${url} - ${elapsed}ms - data: ${JSON.stringify(data)}`,
         );
-        return data;
+        return {
+          success: true,
+          data: data,
+          timestamp: new Date().toISOString(),
+          path: url,
+        };
       }),
     );
   }

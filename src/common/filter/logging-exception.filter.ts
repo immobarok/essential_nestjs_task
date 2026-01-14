@@ -13,7 +13,7 @@ export class CustomResponseFilter implements ExceptionFilter {
     const response = ctx.getResponse();
     const request = ctx.getRequest<Request>();
 
-    console.error('Exception caught:', exception); // Add logging
+    console.error('Exception caught:', exception);
 
     let status: number;
     let message: string | object;
@@ -21,7 +21,6 @@ export class CustomResponseFilter implements ExceptionFilter {
     if (exception instanceof HttpException) {
       status = exception.getStatus();
       const res = exception.getResponse();
-      // res might be a string or object
       message = typeof res === 'string' ? { message: res } : res;
     } else {
       status = HttpStatus.INTERNAL_SERVER_ERROR;

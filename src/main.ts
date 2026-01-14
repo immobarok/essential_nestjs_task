@@ -1,13 +1,17 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module.js';
-import { ValidationPipe } from '@nestjs/common';
-import { CustomResponseFilter } from './common/filter/logging-exception.filter.js';
 import { DetailedLoggingInterceptor } from './common/interceptor/detailed-logging.interceptor.js';
+import { CustomResponseFilter } from './common/filter/logging-exception.filter.js';
+import { ValidationPipe } from '@nestjs/common';
+
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+
   app.useGlobalInterceptors(new DetailedLoggingInterceptor());
   app.useGlobalFilters(new CustomResponseFilter());
+  app.setGlobalPrefix('api/v1');
+
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,
@@ -15,7 +19,9 @@ async function bootstrap() {
       transform: true,
     }),
   );
-  await app.listen(process.env.PORT ?? 3000);
-  console.log(`🚀 ~ App is running on port: ${await app.getUrl()}`);
+
+  const port = process.env.PORT ?? 3000;
+  await app.listen(port);
+  console.log(`🚀 ~ App is running on: http://localhost:${port}/api/v1`);
 }
 bootstrap();

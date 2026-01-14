@@ -8,28 +8,28 @@ import {
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { AuthService } from './auth.service.js';
+import { RegisterDto } from './dto/register.dto.js';
+import { LoginDto } from './dto/login.dto.js';
+
 
 @Controller('auth')
 export class AuthController {
   constructor(private authService: AuthService) {}
 
   @Post('register')
-  async register(@Body() user: any) {
-    return this.authService.register(user);
+  async register(@Body() registerDto: RegisterDto) {
+    return this.authService.register(registerDto);
   }
 
-  // Use Local Guard for Login
   @UseGuards(AuthGuard('local'))
   @Post('login')
-  async login(@Request() req) {
-    // req.user is populated by LocalStrategy.validate()
-    return this.authService.login(req.user);
+  async login(@Body() loginDto: LoginDto) {
+    return this.authService.login(loginDto);
   }
 
-  // Use JWT Guard to protect this route
   @UseGuards(AuthGuard('jwt'))
   @Get('profile')
-  getProfile(@Request() req) {
-    return req.user; // Returns the user data from token payload
+  getProfile(@Request() req: any) {
+    return req.user;
   }
 }

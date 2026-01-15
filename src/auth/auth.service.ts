@@ -25,7 +25,23 @@ export class AuthService {
   async login(user: any) {
     const payload = { email: user.email, sub: user.id };
     return {
-      access_token: this.jwtService.sign(payload),
+      success: true,
+      message: 'Login successful',
+      data: {
+        user: {
+          id: user.id,
+          name: user.name,
+          email: user.email,
+          role: user.role,
+          avatar: user.displayImage,
+          isVerified: user.isVerified,
+        },
+        token: this.jwtService.sign(payload),
+        auth: {
+          type: 'Bearer',
+          expiresIn: '1h',
+        },
+      },
     };
   }
 

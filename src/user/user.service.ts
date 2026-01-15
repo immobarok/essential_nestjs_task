@@ -39,6 +39,9 @@ export class UsersService {
         email: data.email,
         name: data.name,
         password: hashedPassword,
+        displayImage: data.displayImage,
+        isVerified: false,
+        role: data.role || 'user',
       },
     });
   }

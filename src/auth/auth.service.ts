@@ -29,7 +29,13 @@ export class AuthService {
     };
   }
 
-  async register(user: any) {
-    return this.usersService.create(user);
+  async register(userData: any) {
+    const user = await this.usersService.create(userData);
+    const { password, ...userWithoutPass } = user;
+    const token = await this.login(userWithoutPass);
+    return {
+      user: userWithoutPass,
+      ...token,
+    };
   }
 }

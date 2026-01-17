@@ -5,6 +5,7 @@ import {
   IsOptional,
   MinLength,
   IsIn,
+  IsDate,
 } from 'class-validator';
 
 export class CreateUserDto {
@@ -27,4 +28,12 @@ export class CreateUserDto {
   @IsOptional()
   @IsIn(['user', 'admin'])
   role?: string;
+
+  @IsOptional()
+  @IsString()
+  emailVerificationToken?: string;
+
+  @IsOptional()
+  @IsDate()
+  emailVerificationExpiry?: Date;
 }

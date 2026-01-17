@@ -5,6 +5,7 @@ import {
   Request,
   Get,
   Body,
+  Query,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { AuthService } from './auth.service.js';
@@ -18,6 +19,16 @@ export class AuthController {
   @Post('register')
   async register(@Body() registerDto: RegisterDto) {
     return this.authService.register(registerDto);
+  }
+
+  @Get('verify-email')
+  async verifyEmail(@Query('token') token: string) {
+    return this.authService.verifyEmail(token);
+  }
+
+  @Post('resend-verification')
+  async resendVerification(@Body('email') email: string) {
+    return this.authService.resendVerificationEmail(email);
   }
 
   @UseGuards(AuthGuard('local'))

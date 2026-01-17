@@ -42,7 +42,39 @@ export class UsersService {
         password: hashedPassword,
         displayImage: data.displayImage,
         isVerified: false,
+        emailVerificationToken: data.emailVerificationToken,
+        emailVerificationExpiry: data.emailVerificationExpiry,
         role: data.role || 'user',
+      },
+    });
+  }
+
+  // Find user by verification token
+  async findByVerificationToken(token: string) {
+    return this.prisma.user.findFirst({
+      where: { emailVerificationToken: token },
+    });
+  }
+
+  // Mark email as verified
+  async markEmailAsVerified(userId: number) {
+    return this.prisma.user.update({
+      where: { id: userId },
+      data: {
+        isVerified: true,
+        emailVerificationToken: null,
+        emailVerificationExpiry: null,
+      },
+    });
+  }
+
+  // Update verification token
+  async updateVerificationToken(userId: number, token: string, expiry: Date) {
+    return this.prisma.user.update({
+      where: { id: userId },
+      data: {
+        emailVerificationToken: token,
+        emailVerificationExpiry: expiry,
       },
     });
   }

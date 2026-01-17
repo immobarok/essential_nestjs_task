@@ -7,11 +7,13 @@ import { JwtModule } from '@nestjs/jwt';
 import { LocalStrategy } from './local.strategy';
 import { JwtStrategy } from './jwt.strategy';
 import { JwtAuthGuard } from './jwt-auth.guard';
+import { MailModule } from '../mail/mail.module';
 
 @Module({
   imports: [
     UsersModule,
     PassportModule,
+    MailModule,
     JwtModule.register({
       secret: process.env.JWT_SECRET || 'defaultSecretKey',
       signOptions: { expiresIn: '60m' },

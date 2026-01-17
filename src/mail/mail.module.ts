@@ -5,6 +5,34 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { join } from 'path';
 import { MailService } from './mail.service';
 
+/* 
+ MailerModule.forRootAsync({
+      imports: [ConfigModule],
+      useFactory: async (config: ConfigService) => ({
+        transport: {
+          host: config.get('MAIL_HOST'),
+          port: 587,
+          secure: false,
+          auth: {
+            user: config.get('MAIL_USER'),
+            pass: config.get('MAIL_PASSWORD'),
+          },
+        },
+        defaults: {
+          from: `"No Reply" <${config.get('MAIL_FROM')}>`,
+        },
+        template: {
+          dir: join(__dirname, 'templates'),
+          adapter: new HandlebarsAdapter(),
+          options: {
+            strict: true,
+          },
+        },
+      }),
+      inject: [ConfigService],
+    }),
+*/
+
 @Module({
   imports: [
     ConfigModule,

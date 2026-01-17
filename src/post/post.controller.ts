@@ -1,52 +1,34 @@
-import {
-  Controller,
-  Post,
-  Body,
-  UploadedFiles,
-  UseInterceptors,
-  UseGuards,
-  Req,
-} from '@nestjs/common';
-import { FilesInterceptor } from '@nestjs/platform-express';
-import { PostService } from './post.service.js';
-import { CreatePostDto } from './dto/create-post.dto.js';
-import { FileUploadService } from '../common/services/file-upload.service.js';
-import { JwtAuthGuard } from '../auth/jwt-auth.guard.js';
+import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { PostService } from './post.service';
+import { CreatePostDto } from './dto/create-post.dto';
+import { UpdatePostDto } from './dto/update-post.dto';
 
-
-@Controller('posts')
+@Controller('post')
 export class PostController {
-  constructor(
-    private readonly postService: PostService,
-    private readonly fileUploadService: FileUploadService,
-  ) {}
+  constructor(private readonly postService: PostService) {}
 
-  @Post("create")
-  @UseGuards(JwtAuthGuard) // Shudhu login kora user access pabe
-  @UseInterceptors(FilesInterceptor('images', 10)) // Max 10 images, field name 'images'
-  async create(
-    @UploadedFiles() files: Array<Express.Multer.File>,
-    @Body() createPostDto: CreatePostDto,
-    @Req() req: any,
-  ) {
-    // 1. JWT Token theke User ID neya
-    const userId = req.user.id;
+  @Post()
+  create(@Body() createPostDto: CreatePostDto) {
+    return this.postService.create(createPostDto);
+  }
 
-    // 2. Image upload logic (Check if files exist)
-    let imageUrls: string[] = [];
-    if (files && files.length > 0) {
-      // FileUploadService er maddhome file gulo bucket e pathano
-      imageUrls = await this.fileUploadService.uploadToLocalBucket(
-        files,
-        'posts',
-      );
-    }
+  @Get()
+  findAll() {
+    return this.postService.findAll();
+  }
 
-    // 3. Service call kore Database record create kora
-    return await this.postService.createPost(
-      createPostDto,
-      userId,
-      imageUrls,
-    );
+  @Get(':id')
+  findOne(@Param('id') id: string) {
+    return this.postService.findOne(+id);
+  }
+
+  @Patch(':id')
+  update(@Param('id') id: string, @Body() updatePostDto: UpdatePostDto) {
+    return this.postService.update(+id, updatePostDto);
+  }
+
+  @Delete(':id')
+  remove(@Param('id') id: string) {
+    return this.postService.remove(+id);
   }
 }

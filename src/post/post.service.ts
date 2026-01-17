@@ -1,31 +1,26 @@
-import { Injectable, Logger } from '@nestjs/common';
-import { PrismaService } from '../prisma.service.js';
-import { CreatePostDto } from './dto/create-post.dto.js';
+import { Injectable } from '@nestjs/common';
+import { CreatePostDto } from './dto/create-post.dto';
+import { UpdatePostDto } from './dto/update-post.dto';
 
 @Injectable()
 export class PostService {
-  private readonly logger = new Logger(PostService.name);
+  create(createPostDto: CreatePostDto) {
+    return 'This action adds a new post';
+  }
 
-  constructor(private prisma: PrismaService) {}
-  async createPost(data: CreatePostDto, userId: number, imageUrls: string[]) {
-    try {
-      return await this.prisma.post.create({
-        data: {
-          title: data.title,
-          content: data.content,
-          authorId: userId,
-          images: {
-            create: imageUrls.map((url) => ({ url })),
-          },
-        },
-        include: {
-          images: true,
-          author: { select: { id: true, email: true } },
-        },
-      });
-    } catch (error) {
-      this.logger.error('Failed to create post', error.stack);
-      throw error;
-    }
+  findAll() {
+    return `This action returns all post`;
+  }
+
+  findOne(id: number) {
+    return `This action returns a #${id} post`;
+  }
+
+  update(id: number, updatePostDto: UpdatePostDto) {
+    return `This action updates a #${id} post`;
+  }
+
+  remove(id: number) {
+    return `This action removes a #${id} post`;
   }
 }

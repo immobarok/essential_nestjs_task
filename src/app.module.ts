@@ -7,6 +7,8 @@ import { UsersModule } from './user/user.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { AuthModule } from './auth/auth.module';
 import { MailModule } from './mail/mail.module';
+import { UploadModule } from './upload/upload.module';
+import { MinioModule } from './minio/minio.module';
 
 @Module({
   imports: [
@@ -16,6 +18,8 @@ import { MailModule } from './mail/mail.module';
     PrismaModule,
     AuthModule,
     MailModule,
+    UploadModule,
+    MinioModule,
   ],
   controllers: [AppController],
   providers: [AppService],

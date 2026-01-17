@@ -1,4 +1,15 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  UseInterceptors,
+  UploadedFiles,
+} from '@nestjs/common';
+import { FilesInterceptor } from '@nestjs/platform-express';
 import { PostService } from './post.service';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
@@ -7,9 +18,13 @@ import { UpdatePostDto } from './dto/update-post.dto';
 export class PostController {
   constructor(private readonly postService: PostService) {}
 
-  @Post()
-  create(@Body() createPostDto: CreatePostDto) {
-    return this.postService.create(createPostDto);
+  @Post("create-post")
+  @UseInterceptors(FilesInterceptor('images', 10))
+  create(
+    @Body() createPostDto: CreatePostDto,
+    @UploadedFiles() files?: Express.Multer.File[],
+  ) {
+    return this.postService.create(createPostDto, files);
   }
 
   @Get()
@@ -23,8 +38,13 @@ export class PostController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updatePostDto: UpdatePostDto) {
-    return this.postService.update(+id, updatePostDto);
+  @UseInterceptors(FilesInterceptor('images', 10))
+  update(
+    @Param('id') id: string,
+    @Body() updatePostDto: UpdatePostDto,
+    @UploadedFiles() files?: Express.Multer.File[],
+  ) {
+    return this.postService.update(+id, updatePostDto, files);
   }
 
   @Delete(':id')

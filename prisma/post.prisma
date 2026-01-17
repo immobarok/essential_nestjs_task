@@ -4,7 +4,6 @@ model Post {
   content   String?
   published Boolean? @default(false)
   images    Image[]  
-  
   author    User?    @relation(fields: [authorId], references: [id])
   authorId  Int?
   createdAt DateTime @default(now())
